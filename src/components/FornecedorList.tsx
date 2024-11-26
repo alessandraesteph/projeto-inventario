@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Fornecedor } from '../types/fornecedor';
 import "../pages/Form.css";
@@ -12,13 +11,15 @@ interface FornecedorListProps {
 const FornecedorList = ({ fornecedores, onEdit, onDelete }: FornecedorListProps) => {
     return (
         <div className="list-container">
-            <ul className="fornecedor-list">
+            <ul className="list">  {}
                 {fornecedores.map((fornecedor) => (
-                    <li key={fornecedor.id} className="fornecedor-item">
-                        <div>
-                            <strong>{fornecedor.nome}</strong> - {fornecedor.cnpj} - {fornecedor.contato}
+                    <li key={fornecedor.id} className="list-item"> {}
+                        <div className="list-details">
+                            <strong>{fornecedor.nome}</strong><br />
+                            CNPJ: {fornecedor.cnpj}<br />
+                            Contato: {fornecedor.contato}
                         </div>
-                        <div>
+                        <div className="actions">
                             <button className="editar" onClick={() => onEdit(fornecedor)}>Editar</button>
                             <button className="excluir" onClick={() => onDelete(fornecedor.id)}>Excluir</button>
                         </div>

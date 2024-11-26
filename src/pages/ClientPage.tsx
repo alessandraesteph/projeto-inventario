@@ -32,7 +32,6 @@ const ClientPage: React.FC = () => {
     return (
         <div className="container">
             <ClientForm onAdd={handleAddClient} clientEdit={clientEdit} onEdit={handleEditClient} />
-            <h2>Lista de Clientes</h2>
             <ClientList clients={clients} onEdit={handleSetClientEdit} onDelete={handleDeleteClient} />
         </div>
     );

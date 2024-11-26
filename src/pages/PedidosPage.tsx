@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Pedido } from '../types/pedido';
 import { ProdutoPedido } from '../types/pedidoproduto';
 import { Produto } from '../types/produto';
+import PedidoForm from '../components/PedidoForm';
+import './Form.css';
 
 const PedidosPage: React.FC = () => {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -13,7 +15,7 @@ const PedidosPage: React.FC = () => {
   const [produtoSelecionado, setProdutoSelecionado] = useState<number | null>(null);
   const [quantidadeSelecionada, setQuantidadeSelecionada] = useState<number>(0);
 
-  // Simulação de dados carregados
+
   useEffect(() => {
     const mockProdutos: Produto[] = [
       { id: 1, nome: 'Produto A', preco: 50, descricao: 'Descrição A', imagem: null },
@@ -27,18 +29,18 @@ const PedidosPage: React.FC = () => {
     setClientes(mockClientes);
   }, []);
 
-  const handleAdicionarProduto = () => {
-    if (produtoSelecionado && quantidadeSelecionada > 0) {
+  const handleAdicionarProduto = (produtoId: number, quantidade: number) => {
+    if (produtoId && quantidade > 0) {
       setNovoPedido((prev) => {
-        const produtoExistente = prev.find((p) => p.id === produtoSelecionado);
+        const produtoExistente = prev.find((p) => p.id === produtoId);
         if (produtoExistente) {
           return prev.map((p) =>
-            p.id === produtoSelecionado
-              ? { ...p, quantidade: p.quantidade + quantidadeSelecionada }
+            p.id === produtoId
+              ? { ...p, quantidade: p.quantidade + quantidade }
               : p
           );
         }
-        return [...prev, { id: produtoSelecionado, quantidade: quantidadeSelecionada }];
+        return [...prev, { id: produtoId, quantidade }];
       });
       setProdutoSelecionado(null);
       setQuantidadeSelecionada(0);
@@ -88,14 +90,13 @@ const PedidosPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Gerenciamento de Pedidos</h1>
-      {/* Formulário de Cadastro */}
-      <div>
-        <h2>Cadastrar Pedido</h2>
-        <label>
-          Cliente:
+      <h2 className="title">Cadastrar Pedido</h2>
+      <div className='input-group'>
+        <label className="label"> Cliente:</label>
           <select
+            className='input'
             value={clienteId ?? ''}
             onChange={(e) => setClienteId(Number(e.target.value))}
           >
@@ -108,89 +109,60 @@ const PedidosPage: React.FC = () => {
               </option>
             ))}
           </select>
-        </label>
-        <div>
-          <h3>Produtos</h3>
-          <div>
-            <label>
-              Produto:
-              <select
-                value={produtoSelecionado ?? ''}
-                onChange={(e) => setProdutoSelecionado(Number(e.target.value))}
-              >
-                <option value="" disabled>
-                  Selecione um produto
-                </option>
-                {produtos.map((produto) => (
-                  <option key={produto.id} value={produto.id}>
-                    {produto.nome} - R$ {produto.preco}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              Quantidade:
-              <input
-                type="number"
-                min="1"
-                value={quantidadeSelecionada}
-                onChange={(e) => setQuantidadeSelecionada(Number(e.target.value))}
-              />
-            </label>
-            <button onClick={handleAdicionarProduto}>Adicionar Produto</button>
-          </div>
-          <ul>
-            {novoPedido.map((produto) => {
-              const detalhes = produtos.find((p) => p.id === produto.id);
-              return (
-                <li key={produto.id}>
-                  {detalhes?.nome} - {produto.quantidade} x R$ {detalhes?.preco} = R${' '}
-                  {(produto.quantidade * (detalhes?.preco ?? 0)).toFixed(2)}{' '}
-                  <button onClick={() => handleRemoverProduto(produto.id)}>Remover</button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <button onClick={handleAdicionarPedido}>Adicionar Pedido</button>
+
+        <PedidoForm
+          produtos={produtos}
+          onAdicionarProduto={handleAdicionarProduto}
+          onRemoverProduto={handleRemoverProduto}
+          novoPedido={novoPedido}
+          produtoSelecionado={produtoSelecionado}
+          quantidadeSelecionada={quantidadeSelecionada}
+          setProdutoSelecionado={setProdutoSelecionado}
+          setQuantidadeSelecionada={setQuantidadeSelecionada}
+        />
+
+        <button className="cadastrar" onClick={handleAdicionarPedido}>Adicionar Pedido</button>
       </div>
 
-      {/* Listagem de Pedidos */}
-      <div>
-        <h2>Pedidos</h2>
-        {pedidos.map((pedido) => (
-          <div key={pedido.id}>
+      <div className="list-container">
+          <h2 className="title">Pedidos</h2>
+          {pedidos.map((pedido) => (
+          <div className="list-details" key={pedido.id}>
             <h3>Pedido #{pedido.id}</h3>
-            <p>
-              Cliente:{' '}
+            <button className="editar" onClick={() => handleEditarPedido(pedido)}>Editar</button>
+            <button className= "excluir" onClick={() => handleExcluirPedido(pedido.id)}>Excluir</button>
+            <div className="list-item">
+              <strong className='title'>Cliente:{' '}</strong>
               {clientes.find((cliente) => cliente.id === pedido.clienteId)?.nome ?? 'Desconhecido'}
-            </p>
-            <p>Status: {pedido.status}</p>
-            <p>Total: R$ {pedido.total.toFixed(2)}</p>
-            <ul>
+              <p>Status: {pedido.status}</p>
+              <strong><p>Total: R$ {pedido.total.toFixed(2)}</p></strong>
+
+            </div>
+
+            <ul className='list'>
               {pedido.produtos.map((produto) => {
                 const detalhes = produtos.find((p) => p.id === produto.id);
                 return (
-                  <li key={produto.id}>
-                    {detalhes?.nome} - {produto.quantidade} x R$ {detalhes?.preco} = R${' '}
-                    {(produto.quantidade * (detalhes?.preco ?? 0)).toFixed(2)}
+                  <li className='list-item' key={produto.id}>
+                    <strong>{detalhes?.nome}</strong><br/>
+                    Quantidade:{produto.quantidade}<br/>
+                    Preço Unitário: R$ {((detalhes?.preco ?? 0)).toFixed(2)}
                   </li>
+                  
                 );
               })}
             </ul>
-            <button onClick={() => handleEditarPedido(pedido)}>Editar</button>
-            <button onClick={() => handleExcluirPedido(pedido.id)}>Excluir</button>
           </div>
         ))}
       </div>
 
-      {/* Modal para edição de pedido */}
       {pedidoSelecionado && (
-        <div>
-          <h2>Editar Pedido #{pedidoSelecionado.id}</h2>
-          <label>
+        <div className="list-container">
+          <h2 className="title">Editar Pedido #{pedidoSelecionado.id}</h2>
+          <label className='label'></label>
             Status:
             <select
+              className='input'
               value={pedidoSelecionado.status}
               onChange={(e) =>
                 setPedidoSelecionado({
@@ -201,10 +173,9 @@ const PedidosPage: React.FC = () => {
             >
               <option value="Pendente">Pendente</option>
               <option value="Concluído">Concluído</option>
+              <option value="Cancelado">Cancelado</option>
             </select>
-          </label>
-          <button onClick={handleAtualizarPedido}>Salvar Alterações</button>
-          <button onClick={() => setPedidoSelecionado(null)}>Cancelar</button>
+          <button className='editar' onClick={handleAtualizarPedido}>Atualizar Pedido</button>
         </div>
       )}
     </div>

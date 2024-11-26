@@ -64,12 +64,12 @@
     margin-top: 10px; 
 }
 
-.produto-list {
+.list {
     list-style-type: none;
     padding: 0;
 }
 
-.produto-item {
+.list-item {
     padding: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -95,41 +95,6 @@
     max-width: 100%;
     height: auto;
     border-radius: 4px;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-
-    .form {
-        width: 100%;
-        max-width: 400px;
-    }
-
-    .list-container {
-        width: 100%;
-        max-width: 400px;
-    }
-}
-
-@media (max-width: 480px) {
-    .button {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .input {
-        font-size: 14px;
-    }
-
-    .title {
-        font-size: 20px;
-    }
-
-    .produto-item {
-        padding: 10px;
-    }
 }
 
 .cadastrar {
@@ -181,4 +146,71 @@
 
 .excluir:hover {
     background-color: #d32f2f; 
+}
+.input-filter {
+    margin: 0 10px 20px 0;
+    padding: 10px;
+    width: 200px;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Colunas automáticas */
+    gap: 20px; /* Espaço entre os cartões */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.client-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.list-details {
+    margin-bottom: 15px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .form {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .list-container {
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .input {
+        font-size: 14px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+
+    .list-item {
+        padding: 10px;
+    }
 }
