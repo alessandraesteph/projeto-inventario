@@ -6,7 +6,7 @@ import Cliente from './pages/ClientPage';
 import Login from './pages/Login';
 import FornecedoresPage from './pages/FornecedoresPage'; 
 import './global.css';
-
+import Pedido from './pages/Pedido'
 const App: React.FC = () => {
   return (
     <>
@@ -16,6 +16,7 @@ const App: React.FC = () => {
         <Route path="/ProdutoCadastro" element={<Produto />} />
         <Route path="/cliente" element={<Cliente />} />
         <Route path="/FornecedoresPage" element={<FornecedoresPage/>}/>
+        <Route path='/Pedido' element={<Pedido/>}/>
       </Routes>
     </>
   );
